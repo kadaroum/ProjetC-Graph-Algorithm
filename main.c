@@ -26,7 +26,10 @@ typedef struct{
 int nbrSommets;
 int * matriceAdja;
 }Gaph;
-
+int addition(int a){
+    a++;
+    return a;
+}
 
 struct coordonnee * AttributionCoo(Point* points,int NbrSommet, float radius){
     float angle_step = 2 * M_PI / NbrSommet;
