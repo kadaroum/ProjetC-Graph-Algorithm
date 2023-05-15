@@ -26,10 +26,7 @@ typedef struct{
 int nbrSommets;
 int * matriceAdja;
 }Gaph;
-int addition(int a){
-    a++;
-    return a;
-}
+
 
 struct coordonnee * AttributionCoo(Point* points,int NbrSommet, float radius){
     float angle_step = 2 * M_PI / NbrSommet;
@@ -99,32 +96,65 @@ void dijkstra(int graph[MAX_NODES][MAX_NODES], int size, int start) {
     }
     printf("\n");
 }
+ 
+void DrawGraph(int graphLength, int **graph1,SDL_Renderer* render){
+    printf("\n");
+    Point points[5];
+    float radius = 150;
+    AttributionCoo(points,5,radius);
+    for(int i = 0; i < 5; i++){
+        filledCircleRGBA(render,CENTER_X + points[i].x,CENTER_Y + points[i].y,(radius/graphLength)*1.2,WHITE,WHITE,WHITE,WHITE);
+    }
+    for(int x = 0; x != 5; x++){
+        for (int y = 0; y != 5; y++)
+        {
+            printf("%d %d = %d\n",y,x,graph1[y][x]);
+            if(graph1[y][x] != 0){
+                
+                DrawArcs(points[y],points[x],render);
+            }
+        }
+    }
+ }
 
+void AfficheTxt(SDL_Renderer* rend){
+    //TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
+
+
+}
 
 
 int main(int argc, char* argv[]) {
    
+    SDL_Init( SDL_INIT_VIDEO );
+    TTF_Init();
     SDL_Window* window = SDL_CreateWindow("SDL2 gfx Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, TAILLE_X, TAILLE_Y, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    int num_points = 400;
-    float radius = 450;
-    Point point[num_points];
-
-    AttributionCoo(point,num_points,radius);
-    for(int i = 0; i < num_points; i++){
-        circleRGBA(renderer,CENTER_X + point[i].x,CENTER_Y + point[i].y,(radius/num_points)*2,BLACK,BLACK,BLACK,BLACK);
+    int graph1[5][5] = {{0, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 0},
+                        {0, 0, 0, 1, 0},
+                        {0, 1, 0, 0, 0},
+                        {1, 0, 0, 0, 0}};
+   int size = 5;
+   int** graph = (int**)malloc(size * sizeof(int*));
+    for (int i = 0; i < size; i++) {
+        graph[i] = (int*)malloc(size * sizeof(int));
     }
-   
-    //circleRGBA(renderer, 320, 240, 80, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    for(int i = 1; i != num_points-1; i++){
-        for(int y = 0; y != 2; y++){
-    DrawArcs(point[y],point[i],renderer);
+
+    // Initialize the array with some values
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            graph[i][j] = graph1[i][j];
         }
     }
+   
+
+    DrawGraph(5,graph,renderer);
+    
     SDL_RenderPresent(renderer);
 
     SDL_Delay(3000);
@@ -133,20 +163,11 @@ int main(int argc, char* argv[]) {
     SDL_DestroyWindow(window);
     
     SDL_Quit();
+    printf("\n");
 
-   /*
-     // Créer la matrice d'adjacence
-
-    int size = 5;
-    int graph[MAX_NODES][MAX_NODES] = {{0, 0, 18, 0, 3},
-                                        {8, 0, 4, 0, 0},
-                                        {0, 0, 0, 0, 0},
-                                        {0, 1, 0, 0, 0},
-                                        {0, 10, 0, 2, 0}};
-    
-    
-    //appeler la fonction dijkstra avec la matrice d'adjacence, la taille et le nœud de départ
-    dijkstra(graph, size, 0);
-    return 0;
-    */
+    for (int i = 0; i < size; i++) {
+        free(graph[i]);
+    }
+    free(graph);
+   return 0;
 }
