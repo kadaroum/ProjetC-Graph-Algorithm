@@ -2,6 +2,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 #include <limits.h>
+#include <SDL_ttf.h>
 
 #define MAX_NODES 1000
 
@@ -27,18 +28,24 @@ int nbrSommets;
 int * matriceAdja;
 }Gaph;
 
+int CollisionSommetCursor(SDL_Event event,int graphLength,Point points, int radius){
+    if(event.motion.x <= points.x + radius && event.motion.x >= points.x - radius && event.motion.y <= points.y + radius && event.motion.y >= points.y - radius){
+        return 1;
+    }
+    return 0;
+}
 
 struct coordonnee * AttributionCoo(Point* points,int NbrSommet, float radius){
     float angle_step = 2 * M_PI / NbrSommet;
     for (int i = 0; i < NbrSommet; i++) {
         float angle = i * angle_step;
-        points[i].x = radius * cos(angle);
-        points[i].y = radius * sin(angle);
+        points[i].x = radius * cos(angle) + CENTER_X;
+        points[i].y = radius * sin(angle) + CENTER_Y;
     }
 }
 
 void DrawArcs(Point A,Point B,SDL_Renderer * rend){
-     SDL_RenderDrawLine(rend,CENTER_X + A.x, CENTER_Y + A.y, CENTER_X + B.x,CENTER_Y + B.y);
+     SDL_RenderDrawLine(rend,A.x,A.y,B.x,B.y);
 }
 
 void dijkstra(int graph[MAX_NODES][MAX_NODES], int size, int start) {
@@ -84,6 +91,7 @@ void dijkstra(int graph[MAX_NODES][MAX_NODES], int size, int start) {
         }
     }
 
+
     // Afficher les distances les plus courtes et les chemins les plus courts
     printf("Vertex\t Distance\tPath");
     for (i = 0; i < size; i++) {
@@ -97,18 +105,29 @@ void dijkstra(int graph[MAX_NODES][MAX_NODES], int size, int start) {
     printf("\n");
 }
  
-void DrawGraph(int graphLength, int **graph1,SDL_Renderer* render){
+void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Renderer* render,SDL_Event event){
     printf("\n");
-    Point points[5];
-    float radius = 150;
-    AttributionCoo(points,5,radius);
-    for(int i = 0; i < 5; i++){
-        filledCircleRGBA(render,CENTER_X + points[i].x,CENTER_Y + points[i].y,(radius/graphLength)*1.2,WHITE,WHITE,WHITE,WHITE);
+    SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    float radius = (400/graphLength)*1.75;
+    int pressed = 0;
+    if(event.button.button == SDL_BUTTON_LEFT){
+        for (int a = 0; a != graphLength; a++)
+        {
+            if(CollisionSommetCursor(event,graphLength,points[a],radius) == 1 ){
+                points[a].x = event.motion.x;
+                points[a].y = event.motion.y;
+                pressed = 1;
+            } 
+            
+        }
+
+    }
+    for(int i = 0; i < graphLength; i++){
+        filledCircleRGBA(render,points[i].x,points[i].y,radius,WHITE,WHITE,WHITE,WHITE);
     }
     for(int x = 0; x != 5; x++){
         for (int y = 0; y != 5; y++)
         {
-            printf("%d %d = %d\n",y,x,graph1[y][x]);
             if(graph1[y][x] != 0){
                 
                 DrawArcs(points[y],points[x],render);
@@ -134,12 +153,13 @@ int main(int argc, char* argv[]) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    int graph1[5][5] = {{0, 1, 1, 1, 1},
+    int graph1[34][34] = {{0, 1, 1, 1, 1},
                         {0, 0, 0, 0, 0},
                         {0, 0, 0, 1, 0},
                         {0, 1, 0, 0, 0},
                         {1, 0, 0, 0, 0}};
-   int size = 5;
+                    
+   int size = 34;
    int** graph = (int**)malloc(size * sizeof(int*));
     for (int i = 0; i < size; i++) {
         graph[i] = (int*)malloc(size * sizeof(int));
@@ -151,13 +171,40 @@ int main(int argc, char* argv[]) {
             graph[i][j] = graph1[i][j];
         }
     }
+   SDL_Event event;
+
+    //DrawGraph(5,graph,renderer);
+    int graphLength = 35;
+    Point points[graphLength];
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+    AttributionCoo(points,graphLength,400);
+    DrawGraph(graphLength,points,graph,renderer,event);
+
    
-
-    DrawGraph(5,graph,renderer);
+    int running = 1;
+    while ((running))
+    {
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                running = 0;
+                break;
+            
+            case SDL_MOUSEMOTION:
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderClear(renderer);
+            DrawGraph(34,points,graph,renderer,event);
+            //filledCircleRGBA(renderer,mouseX,mouseY,20,WHITE,WHITE,WHITE,WHITE);
+            SDL_RenderPresent(renderer);
+            }
+        }
+        
+    }
     
-    SDL_RenderPresent(renderer);
 
-    SDL_Delay(3000);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
