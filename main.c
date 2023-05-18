@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
    SDL_Event event;
 
     //DrawGraph(5,graph,renderer);
-    int graphLength = 35;
+    int graphLength = 5;
     Point points[graphLength];
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
@@ -196,14 +196,14 @@ int main(int argc, char* argv[]) {
             case SDL_MOUSEMOTION:
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(renderer);
-            DrawGraph(34,points,graph,renderer,event);
+            DrawGraph(graphLength,points,graph,renderer,event);
             //filledCircleRGBA(renderer,mouseX,mouseY,20,WHITE,WHITE,WHITE,WHITE);
             SDL_RenderPresent(renderer);
+            
             }
-        }
         
+        }
     }
-     
      
 
 
