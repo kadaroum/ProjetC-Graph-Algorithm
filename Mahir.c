@@ -117,8 +117,7 @@ Struct_Base *Process_base(FILE* file)
 
         // Print the extracted data
         for (int i = 0; i < nbrVertices; i++) {
-            printf("Vertex %d: weight=%d, nutritive value=%d\n",
-                data[i].vertex_number, data[i].vertex_weight, data[i].vertex_nutritive_value);
+            //printf("Vertex %d: weight=%d, nutritive value=%d\n",data[i].vertex_number, data[i].vertex_weight, data[i].vertex_nutritive_value);
         }
 
         return data;
@@ -181,20 +180,17 @@ Struct_Graph Process_bonus_terrain(FILE* file){
         // Add edges to the graph
         while(fscanf(file,"%d %c%c %d %d\n",&src,&asciichar55,&asciichar76,&dest,&weight)==5){
         if(asciichar55 == '-'){
-            printf("%d -> %d\n",src,dest);
+            //printf("%d -> %d\n",src,dest);
             addEdge(&graph,src,dest,weight);
         }
         if(asciichar55 == '<'){
-            printf("%d <- %d\n",src,dest);
+            //printf("%d <- %d\n",src,dest);
             addEdge(&graph,dest,src,weight);
         }
-
-        }
-       
-
-    showAdjMat(graph,3);
+    }
+    //showAdjMat(graph,3);
     
-    printf("Vertex number: %d\n",graph.numVertices);
+    //printf("Vertex number: %d\n",graph.numVertices);
     return graph;
 }
 Struct_Graph Process_planet_terrain(FILE* file){

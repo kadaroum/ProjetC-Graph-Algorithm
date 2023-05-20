@@ -14,8 +14,6 @@
 
 #define MAX_NODES 1000
 
-
-
 //Coordonées X Y
 typedef struct Point{
     int x;
@@ -57,10 +55,44 @@ typedef struct {
     char terrain_type[20];
 } Struct_VertexData;
 
+typedef struct graphe graphe;
+struct graphe{
+    char char1;
+    char char2;
+    int debut;
+    int end;
+    int nbpeak;
+    int nbintype1;
+    float **matgraphe;
+    int *matgrp;
+    int **test;
+    int *mintheo;
+    char **type;
+    float *coutpartype;
+    float *costofeachtyle;
+
+    float valeurattheend;
+};
+
+//Mission 3 A
 void ford();
+
+//Mission 3 B
+void fordCouple();
+
+int trouverValeurMax(Struct_Base* boites, int n, int poidsMax);
+
+void afficherObjetsEmportes(Struct_Base *boites, int n, int poidsMax);
+
+//Bonus
+void solveTSP(Struct_Graph graph);
+
+void solveTSP2(Struct_Graph graph);
 
 void freeGraph(Struct_Graph* graph);
 
+//Mahir code
+////////////////////////////////////////////////////////
 Struct_Graph Process_planet_terrain_w(FILE* file);
 
 Struct_Graph Process_planet_terrain(FILE* file);
@@ -82,8 +114,25 @@ void showAdjMat(Struct_Graph graph,int spacing);
 void addEdge(Struct_Graph* graph, int src, int dest, int weight);
 
 Struct_Graph createGraph(int numVertices);
+////////////////////////////////////////////////////////////
 
+//HUGO
+////////////////////////////////////////////////////////////////////////
+
+graphe *ini_graphe(FILE *file1,FILE *file2);
+
+int** AAAAAAAAAAAAAAAAAAAAAAAAAAA(graphe *g,int iofthegraph ,int **tabchemin,int iofthetab,int yofthetab, float cost);
+
+void makegraphe(FILE *file1,graphe *g,int *nbgrp,FILE *file2,FILE *file3);
+
+void makegraphe2(FILE *file1,graphe *g,int *nbgrp,FILE *file2,FILE *file3,graphe *raph2);
+//////////////////////////////////////////////////////////////////////////
+
+//SDL
+///////////////////////////////////////////////////////////////////
 void afficherMenu(SDL_Renderer* renderer);
+
+
 
 void dijkstra(Struct_Graph graph);
 
@@ -102,3 +151,7 @@ SDL_Surface* renderNumberToSurface(TTF_Font* font, int number, SDL_Color color);
 void AfficheTxtSurPoint(SDL_Renderer* rend, Point point, int radius, int num);
 
 void DrawGraph(int graphLength, Point points[], int** graph1, SDL_Renderer* render, SDL_Event event);
+//////////////////////////////////////////////////////////////
+
+
+

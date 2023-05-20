@@ -8,11 +8,12 @@ const int CENTER_Y = TAILLE_Y / 2;
 
 int main(int argc, char* argv[]) {
     FILE* fichier = fopen("Data/planete1.txt","r");
-    FILE* fichier2 = fopen("Data/planete4.txt","r");
-    //Struct_Graph Graph1 = Process_planet_terrain(fichier);
-    //Struct_Graph Graph2 = Process_planet_terrain_w(fichier2);
-    dijkstra(Graph1);
- 
+    FILE* fichier2 = fopen("Data/base.txt","r");
+    int n = countLines(fichier2);
+    Struct_Base* Graph2 = Process_base(fichier2);
+    //solveTSP2(Graph2);
+    afficherObjetsEmportes(Graph2,n,40);
+
 
 return 0;
    /*

@@ -190,8 +190,179 @@ int mat[14][14] =  {{ 0,70,30,40,55, 0, 0, 0, 0, 0, 0, 0, 0, 0},
            graph3.adjacencyMatrix [i][j] = mat[i][j];
         }
     }
-    printf("Le nombre maximal de voiture que l'on peut mettre en circulation en même temps pendants une heure est :%d",fordFulkerson(graph3.adjacencyMatrix,0,13,14));
+    printf("Le nombre maximal de voiture que l'on peut mettre en circulation en même temps pendants une heure est :%d",fordFulkerson(graph3.adjacencyMatrix,14,0,13));
     
+}
+
+void fordCouple(){
+
+    Struct_Graph graph2 = createGraph(14);
+    //                S  A  B  C  D  E  F  G  H  I  J  K  L  P
+int mat[14][14] =  {{ 0,70,30,40,55, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 0,30, 0, 0,60, 0, 0, 0},
+                    { 0, 0, 0, 0, 0, 0,15, 0, 0,35, 0, 5, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,25, 0,50, 0},
+                    { 0, 0, 0, 0, 0, 0, 0,11,12,17,10, 4, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 5,10, 2, 0, 6, 0, 7, 0},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,21},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,16},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,45},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,50},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,20},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+    for (int i = 0; i < 14; i++) {
+        for (int j = 0; j < 14; j++) {
+           graph2.adjacencyMatrix [i][j] = mat[i][j];
+        }
+    }
+     for (int i = 0; i < 14; i++) {
+        for (int j = 0; j < 14; j++) {
+           printf("Le nombre maximal de voiture entre %c et %c est %d\n",65+i,65+j,fordFulkerson(graph2.adjacencyMatrix,14,i,j));
+        }
+    }
+}
+
+// Fonction pour résoudre le problème du voyageur de commerce en utilisant l'algorithme du plus proche voisin
+void solveTSP(Struct_Graph graph) {
+    int visited[graph.numVertices]; // Tableau pour marquer les bases visitées
+    for (int i = 0; i < graph.numVertices; i++)
+    {
+        visited[i] = 0;
+    }
+    
+    visited[0] = 1; // Marquer la base de départ comme visitée
+    
+    int currentBase = 0; // Base de départ
+    
+    double totalDistance = 0.0; // Distance totale parcourue
+    
+    printf("Ordre de visite des bases :\n");
+    printf("Début -> ");
+    
+    for (int i = 0; i < graph.numVertices - 2; i++) {
+        double minDistance = INFINITY;
+        int nextBase = -1;
+        
+        for (int j = 0; j < graph.numVertices; j++) {
+            if (!visited[j] && j != currentBase && graph.adjacencyMatrix[currentBase][j] < minDistance) {
+                minDistance = graph.adjacencyMatrix[currentBase][j];
+                nextBase = j;
+            }
+        }
+        
+        visited[nextBase] = 1; // Marquer la prochaine base comme visitée
+        
+        printf("%d -> ",nextBase);
+        
+        totalDistance += minDistance;
+        
+        currentBase = nextBase;
+    }
+    
+    // Retour à la base de départ
+    printf("Début\n");
+    totalDistance += graph.adjacencyMatrix[currentBase][0];
+    
+    printf("Distance totale parcourue : %.2f\n", totalDistance);
+}
+
+void solveTSP2(Struct_Graph graph) {
+    int N = graph.numVertices;
+    int order[N]; // Tableau pour stocker l'ordre de visite des bases
+    int visited[N]; // Tableau pour marquer les bases visitées
+    for (int i = 0; i < graph.numVertices; i++)
+    {
+        visited[i] = 0;
+    }
+    order[0] = 0; // Base de départ
+    order[N - 1] = N - 1; // Base d'arrivée
+    visited[0] = 1; // Marquer la base de départ comme visitée
+    visited[N - 1] = 1; // Marquer la base d'arrivée comme visitée
+    
+    for (int i = 1; i < N - 1; i++) {
+        int bestPosition = -1;
+        double minDistanceIncrease = INFINITY;
+        
+        for (int j = 1; j < N - 1; j++) {
+            if (!visited[j]) {
+                double distanceIncrease = graph.adjacencyMatrix[order[i - 1]][j] + graph.adjacencyMatrix[j][order[i]] - graph.adjacencyMatrix[order[i - 1]][order[i]];
+                
+                if (distanceIncrease < minDistanceIncrease) {
+                    minDistanceIncrease = distanceIncrease;
+                    bestPosition = j;
+                }
+            }
+        }
+        
+        // Décaler les bases déjà insérées pour faire de la place à la nouvelle base
+        for (int j = N - 2; j > bestPosition; j--) {
+            order[j] = order[j - 1];
+        }
+        
+        order[bestPosition] = i; // Insérer la nouvelle base à la meilleure position
+        visited[bestPosition] = 1; // Marquer la base comme visitée
+    }
+    
+    // Afficher l'ordre de visite des bases
+    printf("Ordre de visite des bases :\n");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", order[i]);
+    }
+    printf("\n");
+}
+
+int trouverValeurMax(Struct_Base* boites, int n, int poidsMax) {
+    // Créer une matrice pour stocker les sous-problèmes résolus
+    int valeurs[n + 1][poidsMax + 1];
+    
+    // Initialiser la première ligne et la première colonne à 0
+    for (int i = 0; i <= n; i++) {
+        valeurs[i][0] = 0;
+    }
+    
+    for (int j = 0; j <= poidsMax; j++) {
+        valeurs[0][j] = 0;
+    }
+    
+    // Remplir la matrice de programmation dynamique
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= poidsMax; j++) {
+            // Si le poids de la boîte actuelle est inférieur ou égal à la capacité maximale
+            // alors nous avons deux choix : soit inclure la boîte, soit ne pas l'inclure
+            if (boites[i - 1].vertex_weight <= j) {
+                int valeurAvecBoite = boites[i - 1].vertex_nutritive_value + valeurs[i - 1][j - boites[i - 1].vertex_weight];
+                int valeurSansBoite = valeurs[i - 1][j];
+                
+                // Prendre la valeur maximale entre les deux choix
+                valeurs[i][j] = (valeurAvecBoite > valeurSansBoite) ? valeurAvecBoite : valeurSansBoite;
+            }
+            // Sinon, la boîte ne peut pas être incluse
+            else {
+                valeurs[i][j] = valeurs[i - 1][j];
+            }
+        }
+    }
+    
+    // La valeur maximale est stockée dans la dernière cellule de la matrice
+    return valeurs[n][poidsMax];
+}
+
+void afficherObjetsEmportes(Struct_Base *boites, int n, int poidsMax) {
+    int valeurMax = trouverValeurMax(boites, n, poidsMax);
+    int poidsActuel = poidsMax;
+    
+    printf("Objets emportés :\n");
+    
+    for (int i = n; i > 0 && valeurMax > 0; i--) {
+         if (valeurMax != boites[i - 1].vertex_nutritive_value && poidsActuel >= boites[i - 1].vertex_weight && valeurMax - boites[i - 1].vertex_nutritive_value == trouverValeurMax(boites, i - 1, poidsActuel - boites[i - 1].vertex_weight)) {
+            printf("Numéro : %d, ValNu : %d, Poids : %d\n", boites[i - 1].vertex_number,boites[i - 1].vertex_nutritive_value, boites[i - 1].vertex_weight);
+            valeurMax -= boites[i - 1].vertex_nutritive_value;
+            poidsActuel -= boites[i - 1].vertex_weight;
+        }
+    }
 }
 /*
 // Exemple d'utilisation de l'algorithme de Ford-Fulkerson
