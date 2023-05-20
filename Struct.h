@@ -63,11 +63,11 @@ Struct_Graph Process_planet_terrain(FILE* file);
 
 Struct_Graph Process_bonus_terrain(FILE* file);
 
-Struct_VertexData Process_typeSommet(FILE* file);
+Struct_VertexData *Process_typeSommet(FILE* file);
 
-Struct_Type Process_type(FILE* file);
+Struct_Type *Process_type(FILE* file);
 
-Struct_Base Process_base(FILE* file);
+Struct_Base *Process_base(FILE* file);
 
 void goToLine(FILE* file, int lineNumber);
 

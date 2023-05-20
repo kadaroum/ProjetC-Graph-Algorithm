@@ -11,7 +11,8 @@ int main(int argc, char* argv[]) {
     Struct_Graph Graph1 = Process_planet_terrain(fichier);
     dijkstra(Graph1);
     return 0;
-
+ 
+ 
 
    /*
     SDL_Init( SDL_INIT_VIDEO );

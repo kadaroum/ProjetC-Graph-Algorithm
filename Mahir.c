@@ -72,11 +72,11 @@ void goToLine(FILE* file, int lineNumber) {
     }
 }
 
-Struct_Base Process_base(FILE* file)
+Struct_Base *Process_base(FILE* file)
 {
     int nbrVertices = countLines(file);
 
-        Struct_Base* data = (Struct_Base*)malloc(nbrVertices * sizeof(Struct_Base));
+        Struct_Base *data = (Struct_Base*)malloc(nbrVertices * sizeof(Struct_Base));
         if (data == NULL) {
             printf("Memory allocation failed.\n");
             fclose(file);
@@ -99,9 +99,9 @@ Struct_Base Process_base(FILE* file)
                 data[i].vertex_number, data[i].vertex_weight, data[i].vertex_nutritive_value);
         }
 
-        free(data);
+        return data;
 }
-Struct_Type Process_type(FILE* file)
+Struct_Type *Process_type(FILE* file)
 {
     int nbrVertices;
         fscanf(file, "%d", &nbrVertices); // Read the number of names
@@ -120,13 +120,13 @@ Struct_Type Process_type(FILE* file)
             printf("%s %.1f\n", data[i].name, data[i].value);
         }
 
-        free(data);
+        return data;
 }
-Struct_VertexData Process_typeSommet(FILE* file)
+Struct_VertexData *Process_typeSommet(FILE* file)
 {
     int nbrVertices = countLines(file);
 
-        Struct_VertexData data[nbrVertices];
+        Struct_VertexData * data = (Struct_VertexData*)malloc(nbrVertices * sizeof(Struct_VertexData));
         for (int i = 0; i < nbrVertices; i++) {
             fscanf(file, "%d %s", &data[i].vertex_number, data[i].terrain_type);
         }
@@ -134,6 +134,8 @@ Struct_VertexData Process_typeSommet(FILE* file)
         for (int i = 0; i < nbrVertices; i++) {
             printf("Vertex %d: biome = %s\n", data[i].vertex_number, data[i].terrain_type);
         }
+        return data;
+        
 }
 Struct_Graph Process_bonus_terrain(FILE* file){
     int src, dest, weight;
@@ -163,13 +165,10 @@ Struct_Graph Process_bonus_terrain(FILE* file){
             }
         }
 
-    showAdjMat(graph,3);
-    // Free dynamically allocated memory
-    for (int i = 0; i < graph.numVertices; i++) {
-        free(graph.adjacencyMatrix[i]);
-    }
-    free(graph.adjacencyMatrix);
+    //showAdjMat(graph,3);
+    
     printf("Vertex number: %d\n",graph.numVertices);
+    return graph;
 }
 Struct_Graph Process_planet_terrain(FILE* file){
     //program for  "planetX.txt" "terrainx.txt" without weight
@@ -216,14 +215,11 @@ Struct_Graph Process_planet_terrain(FILE* file){
                 }
             }
         }
-        
        //showAdjMat(graph,1);
-       
-        // Free dynamically allocated memory
-
         printf("Vertex number: %d\n",graph.numVertices);
         return graph;
 }
+
 Struct_Graph Process_planet_terrain_w(FILE* file){
     int src, dest, weight,start,end;
         int maxVertex=0;
@@ -268,14 +264,9 @@ Struct_Graph Process_planet_terrain_w(FILE* file){
             }
         }
         
-        showAdjMat(graph,3);
-       
-        // Free dynamically allocated memory
-        for (int i = 0; i < graph.numVertices; i++) {
-            free(graph.adjacencyMatrix[i]);
-        }
-        free(graph.adjacencyMatrix);
+        //showAdjMat(graph,3);
         printf("Vertex number: %d\n",graph.numVertices);
+        return graph;
 }
 
 /*thibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthib*/
