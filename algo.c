@@ -4,60 +4,81 @@
 
 #define MAX_NODES 1000
 
-void dijkstra(int graph[MAX_NODES][MAX_NODES], int size, int start) {
-    int dist[MAX_NODES];
-    int visited[MAX_NODES];
-    int prev[MAX_NODES];
+void dijkstra(Struct_Graph graph) {
+    int numVertices = graph.numVertices;
+    int* distance = (int*)malloc(numVertices * sizeof(int));
+    int* visited = (int*)calloc(numVertices, sizeof(int));
+    int* prev = (int*)malloc(numVertices * sizeof(int));
 
-    // Initialiser les distances et les prédecesseurs
-    int i;
-    for (i = 0; i < size; i++) {
-        dist[i] = INT_MAX;
-        visited[i] = 0;
+    if (distance == NULL || visited == NULL || prev == NULL) {
+        printf("Memory allocation failed\n");
+        // Handle the error condition, such as returning or freeing previously allocated memory
+        return;
+    }
+
+    for (int i = 0; i < numVertices; i++) {
+        distance[i] = INT_MAX;
         prev[i] = -1;
     }
 
-    dist[start] = 0;
+    distance[graph.start] = 0;
 
-    // Parcourir tous les nœuds pour trouver les distances les plus courtes
-    int count;
-    for (count = 0; count < size - 1; count++) {
-        int minDist = INT_MAX;
-        int minNode = -1;
+    for (int count = 0; count < numVertices - 1; count++) {
+        int minDistance = INT_MAX;
+        int minIndex = -1;
 
-        // Trouver le nœud non visité avec la plus petite distance
-        int j;
-        for (j = 0; j < size; j++) {
-            if (visited[j] == 0 && dist[j] < minDist) {
-                minDist = dist[j];
-                minNode = j;
+        for (int v = 0; v < numVertices; v++) {
+            if (!visited[v] && distance[v] <= minDistance) {
+                minDistance = distance[v];
+                minIndex = v;
             }
         }
 
-        // Marquer le nœud courant comme visité
-        visited[minNode] = 1;
+        int u = minIndex;
+        visited[u] = 1;
 
-        // Mettre à jour les distances des nœuds adjacents
-        int k;
-        for (k = 0; k < size; k++) {
-            if (visited[k] == 0 && graph[minNode][k] && dist[minNode] != INT_MAX && dist[minNode] + graph[minNode][k] < dist[k]) {
-                dist[k] = dist[minNode] + graph[minNode][k];
-                prev[k] = minNode;
+        for (int v = 0; v < numVertices; v++) {
+            int weight = graph.adjacencyMatrix[u][v];
+
+            if (!visited[v] && weight && distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
+                distance[v] = distance[u] + weight;
+                prev[v] = u;
             }
         }
     }
 
-    // Afficher les distances les plus courtes et les chemins les plus courts
-    printf("Vertex\t Distance\tPath");
-    for (i = 0; i < size; i++) {
-        printf("\n%d \t\t %d\t\t%d", i, dist[i], i);
-        int j = i;
-        while (j != start && prev[j] != -1) {
-            printf(" <- %d", prev[j]);
-            j = prev[j];
+    printf("Vertex\t Distance\tPath\n");
+    for (int i = 0; i < numVertices; i++) {
+        if (distance[i] != INT_MAX) {
+            printf("%d\t %d\t\t%d", i, distance[i], i);
+            int j = i;
+            while (j != graph.start && prev[j] != -1) {
+                printf(" <- %d", prev[j]);
+                j = prev[j];
+            }
+            printf("\n");
         }
     }
-    printf("\n");
+
+    int nonReachableCount = 0;
+    for (int i = 0; i < numVertices; i++) {
+        if (distance[i] == INT_MAX) {
+            if (nonReachableCount == 0) {
+                printf("Non-reachable vertices: ");
+            }
+            printf("%d ", i);
+            nonReachableCount++;
+        }
+    }
+    if (nonReachableCount == 0) {
+        printf("All vertices are reachable.\n");
+    } else {
+        printf("\n");
+    }
+
+    free(distance);
+    free(visited);
+    free(prev);
 }
 
 

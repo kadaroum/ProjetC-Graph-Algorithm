@@ -1,8 +1,19 @@
 #include "Struct.h"
 
+const int TAILLE_X = 640 * 2.7;
+const int TAILLE_Y = 480 * 2;
+
+const int CENTER_X = TAILLE_X / 2;
+const int CENTER_Y = TAILLE_Y / 2;
 
 int main(int argc, char* argv[]) {
-   
+    FILE* fichier = fopen("Data/planete1.txt","r");
+    Struct_Graph Graph1 = Process_planet_terrain(fichier);
+    dijkstra(Graph1);
+    return 0;
+
+
+   /*
     SDL_Init( SDL_INIT_VIDEO );
     TTF_Init();
     SDL_Window* window = SDL_CreateWindow("SDL2 gfx Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, TAILLE_X, TAILLE_Y, SDL_WINDOW_SHOWN);
@@ -40,6 +51,8 @@ int main(int argc, char* argv[]) {
     AttributionCoo(points,graphLength,400);
     DrawGraph(graphLength,points,graph,renderer,event);
     //dijkstra(graph,graphLength,0);
+
+    
     int running = 1;
     while ((running))
     {
@@ -52,12 +65,15 @@ int main(int argc, char* argv[]) {
                 break;
             
             case SDL_MOUSEMOTION:
-            
+            afficherMenu(renderer);
+
 
             case SDL_MOUSEBUTTONDOWN :
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(renderer);
-            DrawGraph(graphLength,points,graph,renderer,event);
+           
+            //DrawGraph(graphLength,points,graph,renderer,event);
+           //boxRGBA(renderer,0,0,100,100,255,0,255,50);
             SDL_RenderPresent(renderer);
 
             }
@@ -78,4 +94,5 @@ int main(int argc, char* argv[]) {
     }
     free(graph);
    return 0;
+   */
 }

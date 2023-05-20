@@ -1,10 +1,10 @@
 #include "Struct.h"
 
-const int TAILLE_X = 640 * 2;
-const int TAILLE_Y = 480 * 2;
+extern const int TAILLE_X;
+extern const int TAILLE_Y;
 
-const int CENTER_X = TAILLE_X / 2;
-const int CENTER_Y = TAILLE_Y / 2;
+extern const int CENTER_X;
+extern const int CENTER_Y;
 
 const int BLACK = 0;
 const int WHITE = 255;
@@ -78,10 +78,10 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
     }
     for(int i = 0; i < graphLength; i++){
         filledCircleRGBA(render,points[i].x,points[i].y,radius,WHITE,WHITE,WHITE,WHITE);
-        AfficheTxtSurPoint(render,points[i],radius,i+1);
+        //AfficheTxtSurPoint(render,points[i],radius,i+1);
     }
-    for(int x = 0; x != 5; x++){
-        for (int y = 0; y != 5; y++)
+    for(int x = 0; x != graphLength; x++){
+        for (int y = 0; y != graphLength; y++)
         {
             if(graph1[y][x] != 0){
                 
@@ -90,3 +90,40 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
         }
     }
  }
+
+
+
+void afficherMenu(SDL_Renderer* renderer) {
+    // Chargement de l'image de fond
+    SDL_Surface* backgroundSurface = IMG_Load("StarImage.png");
+    if (!backgroundSurface) {
+        printf("Erreur lors du chargement de l'image de fond : %s\n", IMG_GetError());
+        return;
+    }
+
+    // Conversion de la surface en texture
+    SDL_Texture* backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    SDL_FreeSurface(backgroundSurface);
+    if (!backgroundTexture) {
+        printf("Erreur lors de la création de la texture de fond : %s\n", SDL_GetError());
+        return;
+    }
+
+    // Chargement des images pour les boutons
+    SDL_Surface* buttonSurface = IMG_Load("bouton.png");
+    if (!buttonSurface) {
+        printf("Erreur lors du chargement de l'image du bouton : %s\n", IMG_GetError());
+        SDL_DestroyTexture(backgroundTexture);
+        return;
+    }
+
+  
+        SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+
+       
+
+
+ 
+}
+
+
