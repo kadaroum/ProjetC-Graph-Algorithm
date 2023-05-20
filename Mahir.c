@@ -180,8 +180,8 @@ Struct_Graph Process_planet_terrain(FILE* file){
         
         fscanf(file, "Debut:%*[^0-9]%d\n", &graph.start);
         fscanf(file, "Fin:%*[^0-9]%d\n", &graph.end);
-        printf("Debut: %d\n", graph.start);
-        printf("Fin: %d\n", graph.end);
+        //printf("Debut: %d\n", graph.start);
+        //printf("Fin: %d\n", graph.end);
         while (fscanf(file, "%d %*2[-<>] %d ", &src, &dest) == 2) {
             if (src > maxVertex) {
                 maxVertex = src;
@@ -209,7 +209,7 @@ Struct_Graph Process_planet_terrain(FILE* file){
         while (fscanf(file, "%d %*2[-<>] %d ", &src, &dest) == 2) {
             if (src != dest) {
                 if (src < dest) {
-                    graph.adjacencyMatrix[src][dest] = weight;
+                    graph.adjacencyMatrix[dest][src] = weight;
                 } else {
                    graph.adjacencyMatrix[src][dest] = weight;
                 }
@@ -226,8 +226,8 @@ Struct_Graph Process_planet_terrain_w(FILE* file){
         int lineNumber = 3;
         
         Struct_Graph graph;
-        fscanf(file, "Debut:%*[^0-9]%d\n", &graph.start);
-        fscanf(file, "Fin:%*[^0-9]%d\n", &graph.end);
+        fscanf(file, "Debut:%*[^0-9]%d\n",&start);
+        fscanf(file, "Fin:%*[^0-9]%d\n",&end);
         printf("Debut: %d\n", graph.start);
         printf("Fin: %d\n", graph.end);
         while (fscanf(file, "%d %*2[-<>] %d %d", &src, &dest,&weight) == 3) {
@@ -240,6 +240,8 @@ Struct_Graph Process_planet_terrain_w(FILE* file){
         }
         int numVertices = maxVertex + 1;
         graph = createGraph(numVertices);
+        graph.start = start;
+        graph.end  = end;
         goToLine(file, lineNumber);
 
         long currentPosition = ftell(file);
@@ -256,19 +258,20 @@ Struct_Graph Process_planet_terrain_w(FILE* file){
         
         while (fscanf(file, "%d %*2[-<>] %d %d", &src, &dest,&weight) == 3) {
             if (src != dest) {
-                if (src < dest) {
-                    addEdge(&graph, src, dest, weight);
+                if (src > dest) {
+                    graph.adjacencyMatrix[dest][src] = weight;
                 } else {
-                    addEdge(&graph, dest, src, weight);
+                   graph.adjacencyMatrix[src][dest] = weight;
                 }
             }
         }
         
-        //showAdjMat(graph,3);
+        showAdjMat(graph,3);
         printf("Vertex number: %d\n",graph.numVertices);
         return graph;
 }
-
+ 
+ 
 /*thibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthibthib*/
 
 /*
