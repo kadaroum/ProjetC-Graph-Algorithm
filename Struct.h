@@ -57,6 +57,10 @@ typedef struct {
     char terrain_type[20];
 } Struct_VertexData;
 
+void ford();
+
+void freeGraph(Struct_Graph* graph);
+
 Struct_Graph Process_planet_terrain_w(FILE* file);
 
 Struct_Graph Process_planet_terrain(FILE* file);
@@ -82,6 +86,10 @@ Struct_Graph createGraph(int numVertices);
 void afficherMenu(SDL_Renderer* renderer);
 
 void dijkstra(Struct_Graph graph);
+
+bool dfs(int** graph, int V, int s, int t, int parent[]);
+
+int fordFulkerson(int** graph, int V, int source, int sink);
 
 int CollisionSommetCursor(SDL_Event event, int graphLength, Point points, int radius);
 

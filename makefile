@@ -5,4 +5,4 @@ run: program
 	./program
 	
 valgrind: program
-	valgrind ./program --leak-check=full
+	valgrind --leak-check=full ./program 

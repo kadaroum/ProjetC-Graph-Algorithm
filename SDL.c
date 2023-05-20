@@ -92,10 +92,10 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
  }
 
 
-
+/*
 void afficherMenu(SDL_Renderer* renderer) {
     // Chargement de l'image de fond
-    SDL_Surface* backgroundSurface = IMG_Load("StarImage.png");
+    //SDL_Surface* backgroundSurface = IMG_Load("StarImage.png");
     if (!backgroundSurface) {
         printf("Erreur lors du chargement de l'image de fond : %s\n", IMG_GetError());
         return;
@@ -127,3 +127,4 @@ void afficherMenu(SDL_Renderer* renderer) {
 }
 
 
+*/

@@ -6,9 +6,9 @@
 
 void dijkstra(Struct_Graph graph) {
     int numVertices = graph.numVertices;
-    int* distance = (int*)malloc(numVertices * sizeof(int));
-    int* visited = (int*)calloc(numVertices, sizeof(int));
-    int* prev = (int*)malloc(numVertices * sizeof(int));
+    int* distance = (int*)calloc(MAX_NODES, sizeof(int));
+    int* visited = (int*)calloc(MAX_NODES, sizeof(int));
+    int* prev = (int*)calloc(MAX_NODES, sizeof(int));
 
     if (distance == NULL || visited == NULL || prev == NULL) {
         printf("Memory allocation failed\n");
@@ -20,6 +20,7 @@ void dijkstra(Struct_Graph graph) {
         distance[i] = INT_MAX;
         prev[i] = -1;
     }
+   
 
     distance[graph.start] = 0;
 
@@ -163,6 +164,34 @@ int fordFulkerson(int** graph, int V, int source, int sink) {
     free(residualGraph);
 
     return maxFlow;
+}
+
+void ford(){
+
+    Struct_Graph graph3 = createGraph(14);
+    //                S  A  B  C  D  E  F  G  H  I  J  K  L  P
+int mat[14][14] =  {{ 0,70,30,40,55, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 0,30, 0, 0,60, 0, 0, 0},
+                    { 0, 0, 0, 0, 0, 0,15, 0, 0,35, 0, 5, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,25, 0,50, 0},
+                    { 0, 0, 0, 0, 0, 0, 0,11,12,17,10, 4, 0, 0},
+                    { 0, 0, 0, 0, 0, 0, 5,10, 2, 0, 6, 0, 7, 0},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,21},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,16},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,45},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,50},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,20},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7},
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+    for (int i = 0; i < 14; i++) {
+        for (int j = 0; j < 14; j++) {
+           graph3.adjacencyMatrix [i][j] = mat[i][j];
+        }
+    }
+    printf("Le nombre maximal de voiture que l'on peut mettre en circulation en même temps pendants une heure est :%d",fordFulkerson(graph3.adjacencyMatrix,0,13,14));
+    
 }
 /*
 // Exemple d'utilisation de l'algorithme de Ford-Fulkerson

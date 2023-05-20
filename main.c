@@ -8,12 +8,13 @@ const int CENTER_Y = TAILLE_Y / 2;
 
 int main(int argc, char* argv[]) {
     FILE* fichier = fopen("Data/planete1.txt","r");
-    Struct_Graph Graph1 = Process_planet_terrain(fichier);
+    FILE* fichier2 = fopen("Data/planete4.txt","r");
+    //Struct_Graph Graph1 = Process_planet_terrain(fichier);
+    //Struct_Graph Graph2 = Process_planet_terrain_w(fichier2);
     dijkstra(Graph1);
-    return 0;
- 
  
 
+return 0;
    /*
     SDL_Init( SDL_INIT_VIDEO );
     TTF_Init();
