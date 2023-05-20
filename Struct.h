@@ -136,6 +136,8 @@ void makegraphe2(FILE *file1,graphe *g,int *nbgrp,FILE *file2,FILE *file3,graphe
 ///////////////////////////////////////////////////////////////////
 void afficherMenu(SDL_Renderer* renderer);
 
+void affichageGraph(int type);
+
 void DrawArcs(Point A,Point B,SDL_Renderer * rend);
 
 void dijkstra(Struct_Graph graph);
@@ -154,7 +156,7 @@ SDL_Surface* renderNumberToSurface(TTF_Font* font, int number, SDL_Color color);
 
 void AfficheTxtSurPoint(SDL_Renderer* rend, Point point, int radius, int num);
 
-void DrawGraph(int graphLength, Point points[], int** graph1, SDL_Renderer* render, SDL_Event event);
+void DrawGraph(int graphLength, Point points[], int** graph1, SDL_Renderer* render, SDL_Event event, int type);
 //////////////////////////////////////////////////////////////
 
 

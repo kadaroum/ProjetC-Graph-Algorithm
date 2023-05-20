@@ -45,7 +45,7 @@ void DrawArrow(Point A, Point B, SDL_Renderer* rend, int radius) {
     SDL_RenderDrawLine(rend, A.x, A.y, endX, endY);
 
     // Calculate the arrowhead size based on the radius
-    double arrowSize = radius *0.75  // Adjust this factor to change the angle
+    double arrowSize = radius *0.75;  // Adjust this factor to change the angle
 
     // Calculate the coordinates of the arrowhead
     int arrowX1 = endX - arrowSize * dirX + arrowSize * dirY;
@@ -68,7 +68,7 @@ SDL_Surface* renderNumberToSurface(TTF_Font* font, int number, SDL_Color color) 
 }
 
 void AfficheTxtSurPoint(SDL_Renderer* rend,Point point,int radius, int num){
-    TTF_Font* Sans = TTF_OpenFont("arial.ttf", 100);
+    TTF_Font* Sans = TTF_OpenFont("arial.ttf", 40);
     SDL_Color White = {0, 0, 0};
     SDL_Surface* surfaceMessage = renderNumberToSurface(Sans, num, White); 
     SDL_Texture* Message = SDL_CreateTextureFromSurface(rend, surfaceMessage);
@@ -84,10 +84,9 @@ void AfficheTxtSurPoint(SDL_Renderer* rend,Point point,int radius, int num){
     TTF_CloseFont(Sans);
 }
 
-void 
 
 
-void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Renderer* render,SDL_Event event){
+void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Renderer* render,SDL_Event event,int type){
     printf("\n");
     SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
     float radius = (400/graphLength)*1.75;
@@ -106,7 +105,9 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
     }
     for(int i = 0; i < graphLength; i++){
         filledCircleRGBA(render,points[i].x,points[i].y,radius,WHITE,WHITE,WHITE,WHITE);
-        AfficheTxtSurPoint(render,points[i],radius,i+1);
+        if(type == 1){
+            AfficheTxtSurPoint(render,points[i],radius,i+1);
+        }
     }
     for(int x = 0; x != graphLength; x++){
         for (int y = 0; y != graphLength; y++)
@@ -119,6 +120,46 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
     }
  }
 
+void affichageGraph(int type){
+ SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+    SDL_Window* window = SDL_CreateWindow("SDL2 gfx Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, TAILLE_X, TAILLE_Y, SDL_WINDOW_SHOWN);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    FILE* fichier1 = fopen("Data/planete1.txt","r");
+    Struct_Graph Graph = Process_planet_terrain(fichier1);
+    // Your code to process planet terrain and initialize the graph
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+    Point points[Graph.numVertices];
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+    AttributionCoo(points, Graph.numVertices, 400);
+    SDL_Event event;
+    int running = 1;
+    while (running)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                running = 0;
+                break;
+            case SDL_MOUSEMOTION:
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderClear(renderer);
+                DrawGraph(Graph.numVertices,points,Graph.adjacencyMatrix,renderer,event,type);
+                SDL_RenderPresent(renderer);
+                break;
+            }
+        }
+    }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    printf("\n");
+    TTF_Quit();
+}
 
 
 /*
