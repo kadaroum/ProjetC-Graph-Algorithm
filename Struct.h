@@ -70,9 +70,13 @@ struct graphe{
     char **type;
     float *coutpartype;
     float *costofeachtyle;
-
     float valeurattheend;
 };
+
+//Mission 1
+void Mission1A();
+
+int min(int a, int b);
 
 //Mission 3 A
 void ford();
@@ -132,7 +136,7 @@ void makegraphe2(FILE *file1,graphe *g,int *nbgrp,FILE *file2,FILE *file3,graphe
 ///////////////////////////////////////////////////////////////////
 void afficherMenu(SDL_Renderer* renderer);
 
-
+void DrawArcs(Point A,Point B,SDL_Renderer * rend);
 
 void dijkstra(Struct_Graph graph);
 
@@ -144,7 +148,7 @@ int CollisionSommetCursor(SDL_Event event, int graphLength, Point points, int ra
 
 struct coordonnee* AttributionCoo(Point* points, int NbrSommet, float radius);
 
-void DrawArcs(Point A, Point B, SDL_Renderer* rend);
+void SrawArrow(Point A, Point B, SDL_Renderer* rend,int radius);
 
 SDL_Surface* renderNumberToSurface(TTF_Font* font, int number, SDL_Color color);
 

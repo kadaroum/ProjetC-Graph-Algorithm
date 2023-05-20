@@ -218,17 +218,17 @@ Struct_Graph Process_planet_terrain(FILE* file){
         graph = createGraph(numVertices);
         graph.start = start;
         graph.end  = end;
-        printf("Debut: %d\n", graph.start);
-        printf("Fin: %d\n", graph.end);
+        // printf("Debut: %d\n", graph.start);
+        // printf("Fin: %d\n", graph.end);
         goToLine(file, lineNumber);
 
         long currentPosition = ftell(file);
         // Read and print the line
         char line[100];
         if (fgets(line, sizeof(line), file) != NULL) {
-            printf("Current line: %s", line);
+           //printf("Current line: %s", line);
         } else {
-            printf("Failed to read the line.\n");
+           // printf("Failed to read the line.\n");
         }
 
         // Restore the position
@@ -236,18 +236,19 @@ Struct_Graph Process_planet_terrain(FILE* file){
         
         while(fscanf(file,"%d %c%c %d\n",&src,&asciichar55,&asciichar76,&dest)==4){
         if(asciichar55 == '-'){
-            printf("%d -> %d\n",src,dest);
+            //printf("%d -> %d\n",src,dest);
             addEdge(&graph,src,dest,1);
         }
         if(asciichar55 == '<'){
-            printf("%d <- %d\n",src,dest);
+            //printf("%d <- %d\n",src,dest);
             addEdge(&graph,dest,src,1);
         }
 
         }
-       showAdjMat(graph,1);
-        printf("Vertex number: %d\n",graph.numVertices);
+       //showAdjMat(graph,1);
+        //printf("Vertex number: %d\n",graph.numVertices);
         return graph;
+        
 }
 Struct_Graph Process_planet_terrain_w(FILE* file){
     int src, dest, weight,start,end;

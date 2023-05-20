@@ -82,6 +82,15 @@ void dijkstra(Struct_Graph graph) {
     free(prev);
 }
 
+void Mission1A(){
+    FILE* fichier1 = fopen("Data/planete1.txt","r");
+    Struct_Graph graph1 = Process_planet_terrain(fichier1);
+    
+    dijkstra(graph1);
+
+
+
+}
 
 // Fonction utilitaire pour trouver le minimum de deux valeurs
 int min(int a, int b) {

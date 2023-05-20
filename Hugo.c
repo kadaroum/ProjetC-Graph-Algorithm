@@ -413,5 +413,4 @@ void makegraphe2(FILE *file1,graphe *g,int *nbgrp,FILE *file2,FILE *file3,graphe
 		}
 	}
 
-
 }

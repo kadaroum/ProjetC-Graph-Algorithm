@@ -24,10 +24,40 @@ struct coordonnee * AttributionCoo(Point* points,int NbrSommet, float radius){
         points[i].y = radius * sin(angle) + CENTER_Y;
     }
 }
-
 void DrawArcs(Point A,Point B,SDL_Renderer * rend){
      SDL_RenderDrawLine(rend,A.x,A.y,B.x,B.y);
 }
+// B.x -> A.y  A.y->
+void DrawArrow(Point A, Point B, SDL_Renderer* rend, int radius) {
+    // Calculate the vector from A to B
+    double dx = B.x - A.x;
+    double dy = B.y - A.y;
+    double length = sqrt(dx * dx + dy * dy);
+    double dirX = dx / length;
+    double dirY = dy / length;
+
+    // Calculate the coordinates of the end point (B - radius)
+    int endX = B.x - radius * dirX;
+    int endY = B.y - radius * dirY;
+
+    // Draw a line between A and the end point
+    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255); // White color
+    SDL_RenderDrawLine(rend, A.x, A.y, endX, endY);
+
+    // Calculate the arrowhead size based on the radius
+    double arrowSize = radius *0.75  // Adjust this factor to change the angle
+
+    // Calculate the coordinates of the arrowhead
+    int arrowX1 = endX - arrowSize * dirX + arrowSize * dirY;
+    int arrowY1 = endY - arrowSize * dirY - arrowSize * dirX;
+    int arrowX2 = endX - arrowSize * dirX - arrowSize * dirY;
+    int arrowY2 = endY - arrowSize * dirY + arrowSize * dirX;
+
+    // Draw the arrowhead
+    SDL_RenderDrawLine(rend, endX, endY, arrowX1, arrowY1);
+    SDL_RenderDrawLine(rend, endX, endY, arrowX2, arrowY2);
+}
+
 
 SDL_Surface* renderNumberToSurface(TTF_Font* font, int number, SDL_Color color) {
     char numberStr[20]; // Taille suffisamment grande pour stocker la chaîne de caractères du nombre
@@ -54,7 +84,7 @@ void AfficheTxtSurPoint(SDL_Renderer* rend,Point point,int radius, int num){
     TTF_CloseFont(Sans);
 }
 
-
+void 
 
 
 void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Renderer* render,SDL_Event event){
@@ -72,24 +102,23 @@ void DrawGraph(int graphLength,Point points[graphLength], int **graph1,SDL_Rende
                 points[a].y = event.motion.y;
                 pressed = 1;
             } 
-            
         }
-
     }
     for(int i = 0; i < graphLength; i++){
         filledCircleRGBA(render,points[i].x,points[i].y,radius,WHITE,WHITE,WHITE,WHITE);
-        //AfficheTxtSurPoint(render,points[i],radius,i+1);
+        AfficheTxtSurPoint(render,points[i],radius,i+1);
     }
     for(int x = 0; x != graphLength; x++){
         for (int y = 0; y != graphLength; y++)
         {
             if(graph1[y][x] != 0){
                 
-                DrawArcs(points[y],points[x],render);
+                DrawArrow(points[y],points[x],render,radius);
             }
         }
     }
  }
+
 
 
 /*
